@@ -9,7 +9,9 @@ async function getModulePatchVersion(
 
   await listProcess.status();
   const allVersions = new TextDecoder().decode(await listProcess.output());
-  console.log(`all found versions of ${moduleName}: ${allVersions}`);
+  console.log(
+    `all found versions of ${moduleName}: ${allVersions.split("\n")}`,
+  );
 
   let patchVersion = 0;
 
