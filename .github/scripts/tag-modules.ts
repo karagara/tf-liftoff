@@ -9,6 +9,7 @@ async function getModulePatchVersion(
 
   await listProcess.status();
   const allVersions = new TextDecoder().decode(await listProcess.output());
+  console.log(allVersions);
 
   let patchVersion = 0;
 
@@ -60,9 +61,6 @@ async function setupGitUser() {
     userProc.status(),
     emailProc.status(),
   ]);
-
-  console.log(await userProc.output());
-  console.log(await emailProc.output());
 }
 
 async function tagChangedModules() {
