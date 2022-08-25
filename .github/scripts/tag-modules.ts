@@ -61,8 +61,8 @@ async function setupGitUser() {
     emailProc.status(),
   ]);
 
-  console.log(userProc.output());
-  console.log(emailProc.output());
+  console.log(await userProc.output());
+  console.log(await emailProc.output());
 }
 
 async function tagChangedModules() {
@@ -101,7 +101,7 @@ async function tagChangedModules() {
         });
         await tagProc.status();
 
-        console.log(tagProc.output());
+        console.log(await tagProc.output());
 
         const pushTagProc = Deno.run({
           cmd: [
@@ -114,7 +114,7 @@ async function tagChangedModules() {
         });
         await pushTagProc.status();
 
-        console.log(pushTagProc.output());
+        console.log(await pushTagProc.output());
       } catch (error) {
         console.info(error);
       }
