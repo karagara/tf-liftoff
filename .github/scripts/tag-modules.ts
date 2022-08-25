@@ -3,13 +3,13 @@ async function getModulePatchVersion(
   versionPrefix: string,
 ) {
   const listProcess = Deno.run({
-    cmd: ["git", "--no-pager", "tag", "-l", `"${moduleName}*"`],
+    cmd: ["git", "--no-pager", "tag", "-l", `"*${moduleName}*"`],
     stdout: "piped",
   });
 
   await listProcess.status();
   const allVersions = new TextDecoder().decode(await listProcess.output());
-  console.log(allVersions);
+  console.log(`all found versions of ${moduleName}: ${allVersions}`);
 
   let patchVersion = 0;
 
