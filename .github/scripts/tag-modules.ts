@@ -18,14 +18,15 @@ async function getModulePatchVersion(
   if (allVersions.length > 0) {
     const currentVersion = allVersions
       .split("\n")
-      .slice(-1)[0]
-      .replaceAll('"', "");
+      .pop();
 
     console.log(`current version: ${currentVersion}`);
 
-    if (currentVersion.includes(`${moduleName}-${versionPrefix}`)) {
+    if (currentVersion && currentVersion) {
       const oldPatchVersion = Number.parseInt(
-        currentVersion.replace(`${moduleName}-${versionPrefix}.`, ""),
+        currentVersion
+          .replaceAll('"', "")
+          .replace(`${moduleName}-${versionPrefix}.`, ""),
       );
       patchVersion = oldPatchVersion + 1;
     }
