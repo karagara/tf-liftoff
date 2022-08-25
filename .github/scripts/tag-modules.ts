@@ -86,7 +86,7 @@ async function tagChangedModules() {
         );
 
         console.log(
-          `For module: "${moduleName}", creating version: "${versionPrefix}.${changedModules.toString()}"`,
+          `For module: "${moduleName}", creating version: "${versionPrefix}.${patchVersion}"`,
         );
 
         const tagProc = Deno.run({
