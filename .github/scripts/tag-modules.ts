@@ -4,6 +4,7 @@ async function getModulePatchVersion(
 ) {
   const listProcess = Deno.run({
     cmd: ["git", "--no-pager", "tag", "-l", `"${moduleName}*"`],
+    stdout: "piped",
   });
 
   await listProcess.status();
@@ -43,6 +44,7 @@ async function getChangedModules() {
 async function setupGitUser() {
   const userProc = Deno.run({
     cmd: ["git", "config", "user.name", `"${Deno.env.get("GITHUB_ACTOR")}"`],
+    stdout: "piped",
   });
   const emailProc = Deno.run({
     cmd: [
@@ -51,6 +53,7 @@ async function setupGitUser() {
       "user.email",
       `"${Deno.env.get("GITHUB_ACTOR")}@users.noreply.github.com"`,
     ],
+    stdout: "piped",
   });
 
   await Promise.all([
@@ -94,6 +97,7 @@ async function tagChangedModules() {
             "tag",
             `"${moduleName}-${versionPrefix}.${patchVersion}"`,
           ],
+          stdout: "piped",
         });
         await tagProc.status();
 
@@ -106,6 +110,7 @@ async function tagChangedModules() {
             "origin",
             `"${moduleName}-${versionPrefix}.${patchVersion}"`,
           ],
+          stdout: "piped",
         });
         await pushTagProc.status();
 
