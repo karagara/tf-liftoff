@@ -57,12 +57,19 @@ async function setupGitUser() {
     userProc.status(),
     emailProc.status(),
   ]);
+
+  console.log(userProc.output());
+  console.log(emailProc.output());
 }
 
 async function tagChangedModules() {
   await setupGitUser();
 
   const changedModules = await getChangedModules();
+
+  console.log(
+    `Found the following changed modules: ${changedModules.toString()}`,
+  );
 
   await Promise.all(
     changedModules.map(async (modulePath) => {
@@ -77,6 +84,10 @@ async function tagChangedModules() {
           versionPrefix,
         );
 
+        console.log(
+          `For module: "${moduleName}", creating version: "${versionPrefix}.${changedModules.toString()}"`,
+        );
+
         const tagProc = Deno.run({
           cmd: [
             "git",
@@ -85,6 +96,8 @@ async function tagChangedModules() {
           ],
         });
         await tagProc.status();
+
+        console.log(tagProc.output());
 
         const pushTagProc = Deno.run({
           cmd: [
@@ -95,6 +108,8 @@ async function tagChangedModules() {
           ],
         });
         await pushTagProc.status();
+
+        console.log(pushTagProc.output());
       } catch (error) {
         console.info(error);
       }
