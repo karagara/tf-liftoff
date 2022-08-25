@@ -25,4 +25,4 @@ jobs:
           fileOutput: 'json'
 
       - name: Filter for files
-        run: deno run --allow-read --allow-env .github/scripts/tag-modules.ts
+        run: deno run --allow-read --allow-env --allow-run .github/scripts/tag-modules.ts
