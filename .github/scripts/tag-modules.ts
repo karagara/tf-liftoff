@@ -42,10 +42,9 @@ async function getChangedModules() {
   return Array.from(moduleSet);
 }
 
-async function setupGitUser() {
+async function setupGit() {
   const userProc = Deno.run({
     cmd: ["git", "config", "user.name", `"${Deno.env.get("GITHUB_ACTOR")}"`],
-    stdout: "piped",
   });
   const emailProc = Deno.run({
     cmd: [
@@ -54,17 +53,22 @@ async function setupGitUser() {
       "user.email",
       `"${Deno.env.get("GITHUB_ACTOR")}@users.noreply.github.com"`,
     ],
-    stdout: "piped",
   });
 
   await Promise.all([
     userProc.status(),
     emailProc.status(),
   ]);
+
+  const pullProc = Deno.run({
+    cmd: ["git", "fetch", "--tags"],
+  });
+
+  await pullProc.status();
 }
 
 async function tagChangedModules() {
-  await setupGitUser();
+  await setupGit();
 
   const changedModules = await getChangedModules();
 
