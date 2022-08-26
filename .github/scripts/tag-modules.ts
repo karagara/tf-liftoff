@@ -117,18 +117,18 @@ async function tagChangedModules() {
 
         console.log(await tagProc.output());
 
-        // const pushTagProc = Deno.run({
-        //   cmd: [
-        //     "git",
-        //     "push",
-        //     "origin",
-        //     `${moduleName}-${versionPrefix}.${patchVersion}`,
-        //   ],
-        //   stdout: "piped",
-        // });
-        // await pushTagProc.status();
+        const pushTagProc = Deno.run({
+          cmd: [
+            "git",
+            "push",
+            "origin",
+            `${moduleName}-${versionPrefix}.${patchVersion}`,
+          ],
+          stdout: "piped",
+        });
+        await pushTagProc.status();
 
-        // console.log(await pushTagProc.output());
+        console.log(await pushTagProc.output());
       } catch (error) {
         console.info(error);
       }
