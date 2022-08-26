@@ -39,9 +39,8 @@ async function getModulePatchVersion(
 }
 
 async function getChangedModules() {
-  console.log(`${Deno.env.get("HOME")}/code/tf-liftoff/files.json`);
   const rawChangedFiles = await Deno.readTextFile(
-    `${Deno.env.get("HOME")}/code/tf-liftoff/files.json`,
+    `${Deno.env.get("HOME")}/files.json`,
   );
   const changedFiles: [string] = JSON.parse(rawChangedFiles);
 
