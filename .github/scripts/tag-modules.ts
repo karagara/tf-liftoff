@@ -16,9 +16,7 @@ async function getModulePatchVersion(
   let patchVersion = 0;
 
   if (allVersions.length > 0) {
-    const currentVersion = allVersions
-      .split("\n")
-      .pop();
+    const currentVersion = allVersions.split("\n").at(-1);
 
     console.log(`split list: ${allVersions.split("\n")}`);
 
