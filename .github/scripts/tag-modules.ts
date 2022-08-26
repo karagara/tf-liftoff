@@ -3,7 +3,7 @@ async function getModulePatchVersion(
   versionPrefix: string,
 ) {
   const listProcess = Deno.run({
-    cmd: ["git", "--no-pager", "tag", "-l", `"*${moduleName}*"`],
+    cmd: ["git", "--no-pager", "tag", "-l", `*${moduleName}*`],
     stdout: "piped",
   });
 
@@ -16,7 +16,7 @@ async function getModulePatchVersion(
   let patchVersion = 0;
 
   if (allVersions.length > 0) {
-    const currentVersion = allVersions.split("\n").at(-1);
+    const currentVersion = allVersions.trim().split("\n").at(-1);
 
     console.log(`split list: ${allVersions.split("\n")}`);
 
@@ -26,20 +26,22 @@ async function getModulePatchVersion(
       currentVersion &&
       currentVersion.includes(`${moduleName}-${versionPrefix}`)
     ) {
-      const oldPatchVersion = Number.parseInt(
-        currentVersion
-          .replaceAll('"', "")
-          .replace(`${moduleName}-${versionPrefix}-`, ""),
-      );
-      patchVersion = oldPatchVersion + 1;
+      const patchString = currentVersion
+        .replaceAll('"', "")
+        .replace(`${moduleName}-${versionPrefix}-`, "")
+        .split(".")
+        .at(-1);
+
+      patchVersion = patchString ? Number.parseInt(patchString) + 1 : 0;
     }
   }
   return patchVersion;
 }
 
 async function getChangedModules() {
+  console.log(`${Deno.env.get("HOME")}/code/tf-liftoff/files.json`);
   const rawChangedFiles = await Deno.readTextFile(
-    `${Deno.env.get("HOME")}/files.json`,
+    `${Deno.env.get("HOME")}/code/tf-liftoff/files.json`,
   );
   const changedFiles: [string] = JSON.parse(rawChangedFiles);
 
@@ -108,7 +110,7 @@ async function tagChangedModules() {
           cmd: [
             "git",
             "tag",
-            `"${moduleName}-${versionPrefix}.${patchVersion}"`,
+            `${moduleName}-${versionPrefix}.${patchVersion}`,
           ],
           stdout: "piped",
         });
@@ -116,18 +118,18 @@ async function tagChangedModules() {
 
         console.log(await tagProc.output());
 
-        const pushTagProc = Deno.run({
-          cmd: [
-            "git",
-            "push",
-            "origin",
-            `"${moduleName}-${versionPrefix}.${patchVersion}"`,
-          ],
-          stdout: "piped",
-        });
-        await pushTagProc.status();
+        // const pushTagProc = Deno.run({
+        //   cmd: [
+        //     "git",
+        //     "push",
+        //     "origin",
+        //     `${moduleName}-${versionPrefix}.${patchVersion}`,
+        //   ],
+        //   stdout: "piped",
+        // });
+        // await pushTagProc.status();
 
-        console.log(await pushTagProc.output());
+        // console.log(await pushTagProc.output());
       } catch (error) {
         console.info(error);
       }
